@@ -1,0 +1,37 @@
+# Import PowerCLI Module
+Get-Module -Name VMware* -ListAvailable | Import-Module
+
+# Set PowerCLI Proxy config to NoProxy
+Set-PowerCLIConfiguration -ProxyPolicy NoProxy -Scope Session -confirm:$false | out-null
+
+#Connect to both vCenter Servers 
+Connect-VIServer -server vcenter01, vcenter02
+
+# Set Memory Reservation 
+$list = get-vm | where-object {$_.MemoryGB -ge 32} 
+
+foreach ($vm in $list)
+{
+   
+  $name =$vm.name
+  $MemoryGB = $vm.MemoryGB
+  $MemoryReservation = Get-VMResourceConfiguration $name | Select-Object *
+  $exist = Get-VMResourceConfiguration $name | where-object {$_.MemReservationGB -lt $MemoryGB}
+
+  if ($exist)
+
+     { 
+     Write-Host "Current Memory Reservation for $name = $($MemoryReservation.MemReservationGB)" 
+     # $vm | Get-VMResourceConfiguration | Set-VMResourceConfiguration -MemReservationMB $vm.MemoryMB
+     Write-Host "New Memory Resetvation for $name = $($MemoryReservation.MemReservationGB)"
+     }
+
+  else { 
+  
+  write-host "Reservation Alredy Set for $name = $($MemoryReservation.MemReservationGB)" 
+  
+  }
+}
+
+# Disconnect from vCenter Servers
+Disconnect-VIServer -server vcenter01, vcenter02 -confirm:$false 

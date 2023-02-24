@@ -1,2 +1,0 @@
-List-Snapshots-older-than-48-hours
-get-snapshot -vm * | Where-Object {$_.Created -lt (Get-Date).AddDays(-1)} | Remove-Snapshot -Confirm:$false -runasync
