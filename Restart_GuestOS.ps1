@@ -1,14 +1,12 @@
 #############################################################################################################################################
-# Define Parameter , Input value from Pipeline
-#Check if the server is windows or linux
+# Script will do the following 
+# Takes input (VMName or names) and vcenter server name from powershell 
+# Passs Multiple Parameters .\Restaart-GuestOS.ps1 -vcenters vcenter01, vcenter02 
+# connect to vcenter server
 # Check if VM is powered on or not
 # if vm is powered of break the loop with messsage " VM is already powered off"
 # else execute command to restart guest OS
 # check if server is  back online use while loop for ping return
-# Now check if OS is online and ready for login 
-# For Windows check any widnwos service is running , if not back by 15 minutes exist the script with error else display custom message
-# For Linux check if any service is running 
-# Note: this script should work for only 1 vm. value to to be entered via pipeline
 ###############################################################################################################################################
 
 param (
@@ -20,7 +18,7 @@ param (
         ValueFromPipeline = $true)]
     [string[]]$VCenters
      
-    # Passs Multiple Parameters .\Restaart-GuestOS.ps1 -vcenters vcenter01, vcenter02 
+    
 )
 
 foreach ($vc in $vcenters) {
